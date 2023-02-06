@@ -41,9 +41,6 @@ Library
                ,        process >= 1.6.6.0
                ,        unix >= 2.6
 
-  if os(linux) || os(freebsd)
-    Extra-Libraries: util
-
 Test-Suite stty
   Type: exitcode-stdio-1.0
   Default-Language:     Haskell2010

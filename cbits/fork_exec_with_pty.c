@@ -11,15 +11,10 @@
 #include <sys/ttydefaults.h>
 #undef TTYDEFCHARS
 
-#if defined(__APPLE__)
-#include <util.h>
-#elif defined(__GLIBC__)
 #include <pty.h>
 #include <linux/close_range.h>
 #define DO_CLOSE_RANGE
-#else /* bsd without glibc */
-#include <libutil.h>
-#endif
+#include "syscall.h"
 
 #include <HsFFI.h>
 
@@ -76,9 +71,7 @@ fork_exec_with_pty
         /* If an environment is specified, override the old one. */
         if (env) environ = (char**) env;
 
-#ifdef DO_CLOSE_RANGE
-        close_range(3, ~0U, CLOSE_RANGE_UNSHARE);
-#endif
+        syscall(SYS_close_range, 3, ~0U, CLOSE_RANGE_UNSHARE);
 
         /* Search user's path or not. */
         if (search) execvp(file, argv);
